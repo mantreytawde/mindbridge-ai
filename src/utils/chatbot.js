@@ -135,20 +135,20 @@ What's your number today, and what's contributing to it?`,
 - **Breathing exercises** — 4-7-8 and box breathing
 - **Sleep tips** — sleep hygiene guidance
 - **Mood check-ins** — self-awareness prompts
+- **Maths & general knowledge** — short working and factual study answers
 
 Try the quick-action buttons below, or just type how you're feeling!`,
   thanks: [
     "You're welcome. Remember, taking care of your mental well-being is a strength, not a weakness.",
     "Happy to help. I'm here whenever you need to reflect or learn something new.",
   ],
-  fallback: `Thank you for sharing. While I'm designed for wellness support and psychoeducation, I may not fully understand every message.
+  fallback: `Thank you for sharing. I may not fully understand every message, but I can still help with wellness, maths, or general knowledge.
 
 **Try asking about:**
 - Anxiety or stress coping
 - CBT and thought reframing
-- Breathing exercises
-- Sleep tips
-- Mood check-ins
+- Breathing exercises, sleep, or mood check-ins
+- A maths problem or a study/general-knowledge question
 
 Or use the quick-action buttons below. How can I support you?`,
 }

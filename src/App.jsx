@@ -9,7 +9,7 @@ import {
   QUICK_ACTIONS,
   WELCOME_MESSAGE,
 } from './utils/chatbot'
-import { getGroqReply } from './utils/groq'
+import { runMindBridgePipeline } from './utils/orchestrate'
 import { useTheme } from './hooks/useTheme'
 import './App.css'
 
@@ -40,7 +40,7 @@ function App() {
         return
       }
 
-      const reply = await getGroqReply(conversation)
+      const reply = await runMindBridgePipeline(conversation)
       setMessages((prev) => [...prev, createMessage('assistant', reply)])
     } catch {
       const reply = getBotResponse(text)
