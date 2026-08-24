@@ -170,7 +170,8 @@ body {
 .theme-toggle:focus-visible,
 .quick-action-btn:focus-visible,
 .chat-input input:focus-visible,
-.chat-input button:focus-visible {
+.chat-input button:focus-visible,
+.chat-expand:focus-visible {
   outline: 3px solid var(--ring);
   outline-offset: 2px;
 }
@@ -280,6 +281,17 @@ body {
   overflow: hidden;
 }
 
+.chat-window--expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  border-radius: 0;
+  border: none;
+}
+
 .session-bar {
   display: flex;
   align-items: center;
@@ -290,6 +302,41 @@ body {
   color: var(--text-muted);
   font-size: 0.78rem;
   flex-shrink: 0;
+  cursor: pointer;
+}
+
+.chat-window--expanded .session-bar {
+  cursor: default;
+}
+
+.session-bar p {
+  flex: 1;
+  margin: 0;
+  min-width: 0;
+}
+
+.chat-expand {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chat-expand svg {
+  width: 16px;
+  height: 16px;
+}
+
+.chat-expand:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
 }
 
 .session-dot {

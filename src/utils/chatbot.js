@@ -156,7 +156,7 @@ Or use the quick-action buttons below. How can I support you?`,
 export const CRISIS_RESPONSE = `It sounds like you may be going through something very difficult. **MindBridge AI is not a crisis service** and cannot provide emergency help.
 
 **Please reach out now:**
-- **India:** iCall — 9152987821 | Vandrevala Foundation — 1860-2662-345
+- **India:** Tele-MANAS — 14416 | iCall — 9152987821 | Vandrevala Foundation — 1860-2662-345 | AASRA — 9820466726
 - **Emergency:** 112 or your local emergency number
 
 You deserve real support from a trained professional. Please contact one of these services.`
@@ -192,7 +192,6 @@ export function getBotResponse(userMessage) {
 export const QUICK_ACTIONS = [
   { label: 'Feeling anxious', message: "I'm feeling anxious and overwhelmed" },
   { label: 'Coping tips', message: 'What coping strategies can help me?' },
-  { label: 'What is CBT?', message: 'Explain CBT to me' },
   { label: 'Breathing exercise', message: 'Guide me through a breathing exercise' },
   { label: 'Mood check-in', message: 'Help me with a mood check-in' },
   { label: 'Sleep tips', message: "I can't sleep well lately" },
@@ -203,7 +202,7 @@ export const WELCOME_MESSAGE = {
   role: 'assistant',
   content: `Welcome to **MindBridge AI** — *Connecting minds to clarity*.
 
-I'm your wellness companion for reflection, coping strategies, and psychology education. I'm not a therapist, but I can sit with you, help you explore thoughts, learn about CBT, and practice grounding techniques.
+I'm your wellness companion for reflection, coping strategies, and psychology education. I'm not a therapist, but I can sit with you, help you explore thoughts, and practice grounding techniques.
 
 **How are you feeling today?**`,
   timestamp: Date.now(),

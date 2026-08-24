@@ -20,16 +20,6 @@ const ACTION_ICONS = {
       />
     </svg>
   ),
-  'What is CBT?': (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M5 8h10a4 4 0 0 1 0 8H9l-4 3V8Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
-  ),
   'Breathing exercise': (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
