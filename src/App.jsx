@@ -1,19 +1,38 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Header from './components/Header'
 import Disclaimer from './components/Disclaimer'
 import ChatWindow from './components/ChatWindow'
-import {
-  CRISIS_RESPONSE,
-  getBotResponse,
-  isCrisisMessage,
-  QUICK_ACTIONS,
-  WELCOME_MESSAGE,
-} from './utils/chatbot'
-import { runMindBridgePipeline } from './utils/orchestrate'
+import { QUICK_ACTIONS, WELCOME_MESSAGE } from './utils/chatbot'
 import { useTheme } from './hooks/useTheme'
 import './App.css'
 
-let messageId = 1
+const STORAGE_KEY = 'mindbridge-conversation'
+const NETWORK_ERROR_REPLY =
+  'I could not reach the local chat service. Make sure `npm run dev` is running, then try again.'
+
+function loadStoredMessages() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (!raw) return [WELCOME_MESSAGE]
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed) || parsed.length === 0) return [WELCOME_MESSAGE]
+    const valid = parsed.filter(
+      (m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string',
+    )
+    return valid.length ? valid : [WELCOME_MESSAGE]
+  } catch {
+    return [WELCOME_MESSAGE]
+  }
+}
+
+function maxNumericId(list) {
+  return list.reduce((max, message) => {
+    const n = Number.parseInt(message.id, 10)
+    return Number.isFinite(n) && n > max ? n : max
+  }, 0)
+}
+
+let messageId = 0
 function createMessage(role, content) {
   return {
     id: String(++messageId),
@@ -23,10 +42,43 @@ function createMessage(role, content) {
   }
 }
 
+async function requestChatReply(conversation) {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages: conversation.map(({ role, content }) => ({ role, content })),
+    }),
+  })
+
+  if (!res.ok) {
+    throw new Error(`Chat request failed (${res.status})`)
+  }
+
+  const data = await res.json()
+  if (typeof data?.reply !== 'string' || !data.reply.trim()) {
+    throw new Error('Empty chat reply')
+  }
+
+  return data.reply
+}
+
 function App() {
   const { theme, toggleTheme } = useTheme()
-  const [messages, setMessages] = useState([WELCOME_MESSAGE])
+  const [messages, setMessages] = useState(() => {
+    const stored = loadStoredMessages()
+    messageId = maxNumericId(stored)
+    return stored
+  })
   const [isTyping, setIsTyping] = useState(false)
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages))
+    } catch {
+      // Ignore quota / private-mode failures.
+    }
+  }, [messages])
 
   const handleSend = useCallback(async (text) => {
     const userMessage = createMessage('user', text)
@@ -35,16 +87,10 @@ function App() {
     setIsTyping(true)
 
     try {
-      if (isCrisisMessage(text)) {
-        setMessages((prev) => [...prev, createMessage('assistant', CRISIS_RESPONSE)])
-        return
-      }
-
-      const reply = await runMindBridgePipeline(conversation)
+      const reply = await requestChatReply(conversation)
       setMessages((prev) => [...prev, createMessage('assistant', reply)])
     } catch {
-      const reply = getBotResponse(text)
-      setMessages((prev) => [...prev, createMessage('assistant', reply)])
+      setMessages((prev) => [...prev, createMessage('assistant', NETWORK_ERROR_REPLY)])
     } finally {
       setIsTyping(false)
     }

@@ -1,5 +1,10 @@
-const HF_ENDPOINT = '/api/hf-emotion'
+const HF_ENDPOINT =
+  'https://router.huggingface.co/hf-inference/models/j-hartmann/emotion-english-distilroberta-base'
 const TIMEOUT_MS = 8000
+
+function hfToken() {
+  return (process.env.HF_TOKEN || process.env.HUGGINGFACE_TOKEN || '').trim()
+}
 
 function parseTopEmotion(data) {
   let scores = data
@@ -27,9 +32,15 @@ export async function getEmotion(text) {
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS)
 
   try {
+    const headers = { 'Content-Type': 'application/json' }
+    const token = hfToken()
+    if (token) {
+      headers.Authorization = `Bearer ${token}`
+    }
+
     const res = await fetch(HF_ENDPOINT, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         inputs: input,
         options: { wait_for_model: true },
